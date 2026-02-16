@@ -1,9 +1,10 @@
 package com.sharvari.expensemanager.util;
 
-import com.sharvari.expensemanager.model.User;
+import com.sharvari.expensemanager.model.Category;
 import com.sharvari.expensemanager.model.Expense;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,37 +17,56 @@ public class FileHandler {
     }
 
 
-    public void saveUsersToFile(List<User> users){
+    public void saveExpensesToFile(List<Expense> expenses) {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
 
-            for (User user : users) {
-
-                // Write User details
-                writer.write("USER," + user.getUserId() + "," +
-                        user.getName() + "," +
-                        user.getEmail());
-                writer.newLine();
-
-                // Write Expenses of that user
-                for (Expense expense : user.getExpenses()) {
-                    writer.write("EXPENSE," +
-                            expense.getId() + "," +
-                            expense.getCategory() + "," +
-                            expense.getAmount());
-                    writer.newLine();
-                }
-
-                writer.write("END_USER");
+            for (Expense expense : expenses) {
+                writer.write(
+                        expense.getId() + "," +
+                                expense.getTitle() + "," +
+                                expense.getAmount() + "," +
+                                expense.getCategory() + "," +
+                                expense.getDate() + "," +
+                                expense.getDescription()
+                );
                 writer.newLine();
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
-    public List<User> readUsersFromFile() {
-        return new ArrayList<>(); // need to implement
+    public List<Expense> readExpensesFromFile() {
+
+        List<Expense> expenses = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+
+                String[] parts = line.split(",");
+
+                Expense expense = new Expense(
+                        Integer.parseInt(parts[0]),
+                        parts[1],
+                        Double.parseDouble(parts[2]),
+                        Category.valueOf(parts[3]),
+                        LocalDate.parse(parts[4]),
+                        parts[5]
+                );
+
+                expenses.add(expense);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return expenses;
     }
 }
