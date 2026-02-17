@@ -1,1 +1,0 @@
-101,dk,30000.0,BILLS,2026-08-20,bdayyyyy expenses
