@@ -1,7 +1,7 @@
 package com.sharvari.expensemanager.service;
 
 import com.sharvari.expensemanager.model.*;
-import com.sharvari.expensemanager.util.FileHandler;
+import com.sharvari.expensemanager.util.FileUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +10,11 @@ import java.util.List;
 public class ExpenseManager {
 
     private List<Expense> expenses;
-    private FileHandler fileHandler;
+    private FileUtil fileUtil;
 
     public ExpenseManager(String filePath) {
         this.expenses = new ArrayList<>();
-        this.fileHandler = new FileHandler(filePath);
+        this.fileUtil = new FileUtil(filePath);
     }
 
     public void addExpense(Expense expense) {
@@ -30,11 +30,11 @@ public class ExpenseManager {
     }
 
     public void saveData() {
-        fileHandler.saveExpensesToFile(expenses);
+        fileUtil.saveExpensesToFile(expenses);
     }
 
     public void loadData() {
-        expenses = fileHandler.readExpensesFromFile();
+        expenses = fileUtil.readExpensesFromFile();
     }
 
 }
