@@ -18,8 +18,18 @@ public class ExpenseService {
 
     public void addExpense(int userId, String title, double amount, Category category,
                            LocalDate date, String description, PaymentMode paymentMode, boolean recurring) {
+
+        if (amount <= 0) {
+            System.out.println("❌ Amount must be greater than 0.");
+            return;
+        }
+        if (title == null || title.trim().isEmpty()) {
+            System.out.println("❌ Title cannot be empty.");
+            return;
+        }
+
         int id = repo.nextExpenseId(userId);
-        Expense expense = new Expense(id, userId, title, amount, category, date, description, paymentMode, recurring);
+        Expense expense = new Expense(id, userId, title.trim(), amount, category, date, description, paymentMode, recurring);
         repo.addExpense(expense);
         System.out.println("✅ Expense added! ID: " + id);
 
@@ -27,7 +37,27 @@ public class ExpenseService {
         checkBudgetAlert(userId, category, date.getMonthValue(), date.getYear());
     }
 
+    public void updateExpense(int userId, int expenseId, String title, double amount,
+                              Category category, LocalDate date, String description,
+                              PaymentMode paymentMode, boolean recurring) {
+        if (amount <= 0) {
+            System.out.println("❌ Amount must be greater than 0.");
+            return;
+        }
+        Expense updated = new Expense(expenseId, userId, title.trim(), amount,
+                category, date, description, paymentMode, recurring);
+        repo.updateExpense(updated);
+        System.out.println("✅ Expense " + expenseId + " updated.");
+        checkBudgetAlert(userId, category, date.getMonthValue(), date.getYear());
+    }
+
     public void deleteExpense(int userId, int expenseId) {
+
+        boolean exists = repo.findAllByUser(userId).stream().anyMatch(e -> e.getExpenseId() == expenseId);
+        if (!exists) {
+            System.out.println("❌ Expense ID " + expenseId + " not found.");
+            return;
+        }
         repo.deleteExpense(userId, expenseId);
         System.out.println("🗑️ Expense " + expenseId + " deleted.");
     }
@@ -62,6 +92,11 @@ public class ExpenseService {
     // ─── Budget ────────────────────────────────────────────────────────────────
 
     public void setBudget(int userId, Category category, int month, int year, double limit) {
+        if (limit <= 0) {
+            System.out.println("❌ Budget limit must be greater than 0.");
+            return;
+        }
+
         Budget budget = new Budget(userId, category, month, year, limit);
         repo.saveBudget(budget);
         System.out.printf("✅ Budget set: %s → %.2f for %02d/%d%n", category, limit, month, year);
