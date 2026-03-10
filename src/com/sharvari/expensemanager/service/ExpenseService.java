@@ -18,14 +18,26 @@ public class ExpenseService {
 
     public void addExpense(int userId, String title, double amount, Category category,
                            LocalDate date, String description, PaymentMode paymentMode, boolean recurring) {
+
+        if (amount <= 0) {
+            System.out.println("❌ Amount must be greater than 0.");
+            return;
+        }
+        if (title == null || title.trim().isEmpty()) {
+            System.out.println("❌ Title cannot be empty.");
+            return;
+        }
+
         int id = repo.nextExpenseId(userId);
-        Expense expense = new Expense(id, userId, title, amount, category, date, description, paymentMode, recurring);
+        Expense expense = new Expense(id, userId, title.trim(), amount, category, date, description, paymentMode, recurring);
         repo.addExpense(expense);
         System.out.println("✅ Expense added! ID: " + id);
 
         // Budget alert check
         checkBudgetAlert(userId, category, date.getMonthValue(), date.getYear());
     }
+
+
 
     public void deleteExpense(int userId, int expenseId) {
         repo.deleteExpense(userId, expenseId);
