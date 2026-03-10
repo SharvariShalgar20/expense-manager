@@ -92,6 +92,11 @@ public class ExpenseService {
     // ─── Budget ────────────────────────────────────────────────────────────────
 
     public void setBudget(int userId, Category category, int month, int year, double limit) {
+        if (limit <= 0) {
+            System.out.println("❌ Budget limit must be greater than 0.");
+            return;
+        }
+
         Budget budget = new Budget(userId, category, month, year, limit);
         repo.saveBudget(budget);
         System.out.printf("✅ Budget set: %s → %.2f for %02d/%d%n", category, limit, month, year);
