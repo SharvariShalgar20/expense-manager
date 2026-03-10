@@ -37,7 +37,19 @@ public class ExpenseService {
         checkBudgetAlert(userId, category, date.getMonthValue(), date.getYear());
     }
 
-
+    public void updateExpense(int userId, int expenseId, String title, double amount,
+                              Category category, LocalDate date, String description,
+                              PaymentMode paymentMode, boolean recurring) {
+        if (amount <= 0) {
+            System.out.println("❌ Amount must be greater than 0.");
+            return;
+        }
+        Expense updated = new Expense(expenseId, userId, title.trim(), amount,
+                category, date, description, paymentMode, recurring);
+        repo.updateExpense(updated);
+        System.out.println("✅ Expense " + expenseId + " updated.");
+        checkBudgetAlert(userId, category, date.getMonthValue(), date.getYear());
+    }
 
     public void deleteExpense(int userId, int expenseId) {
         repo.deleteExpense(userId, expenseId);
