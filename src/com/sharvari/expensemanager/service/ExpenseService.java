@@ -52,6 +52,12 @@ public class ExpenseService {
     }
 
     public void deleteExpense(int userId, int expenseId) {
+
+        boolean exists = repo.findAllByUser(userId).stream().anyMatch(e -> e.getExpenseId() == expenseId);
+        if (!exists) {
+            System.out.println("❌ Expense ID " + expenseId + " not found.");
+            return;
+        }
         repo.deleteExpense(userId, expenseId);
         System.out.println("🗑️ Expense " + expenseId + " deleted.");
     }
