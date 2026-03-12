@@ -247,11 +247,14 @@ public class Main {
     }
 
     static double readDouble() {
-        try {
-            return Double.parseDouble(scanner.nextLine().trim());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid amount, defaulting to 0.");
-            return 0;
+        while (true) {
+            try {
+                double val = Double.parseDouble(scanner.nextLine().trim());
+                if (val > 0) return val;
+                System.out.print("Amount must be > 0. Try again: ");
+            } catch (NumberFormatException e) {
+                System.out.print("Invalid number. Try again: ");
+            }
         }
     }
 }
