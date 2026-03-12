@@ -13,8 +13,13 @@ public class UserRepository {
     private List<User> users = new ArrayList<>();
 
     public UserRepository() {
-        FileUtil.ensureFileExists(USERS_FILE);
-        load();
+        try {
+            FileUtil.ensureFileExists(USERS_FILE);
+            load();
+        } catch (RuntimeException e) {
+            System.err.println("❌ Could not initialize user data file. Check permissions.");
+            System.exit(1);
+        }
     }
 
     private void load() {
