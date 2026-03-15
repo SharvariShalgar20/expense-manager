@@ -49,3 +49,11 @@ CREATE TABLE IF NOT EXISTS budgets (
     REFERENCES users(user_id) ON DELETE CASCADE,
     CONSTRAINT uq_budget UNIQUE (user_id, category, month, year)
     );
+
+
+-- 3. Indexes
+
+CREATE INDEX idx_expenses_user     ON expenses(user_id);
+CREATE INDEX idx_expenses_date     ON expenses(expense_date);
+CREATE INDEX idx_expenses_category ON expenses(category);
+CREATE INDEX idx_budgets_user      ON budgets(user_id);
