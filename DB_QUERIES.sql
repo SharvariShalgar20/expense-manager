@@ -57,3 +57,38 @@ CREATE INDEX idx_expenses_user     ON expenses(user_id);
 CREATE INDEX idx_expenses_date     ON expenses(expense_date);
 CREATE INDEX idx_expenses_category ON expenses(category);
 CREATE INDEX idx_budgets_user      ON budgets(user_id);
+
+
+-- 4. Common Application Queries
+
+-- Get all expenses for a user (newest first)
+SELECT * FROM expenses
+WHERE user_id = ?
+ORDER BY expense_date DESC;
+
+-- Get expenses for a specific month/year
+SELECT * FROM expenses
+WHERE user_id = ?
+    AND MONTH(expense_date) = ?
+    AND YEAR(expense_date) = ?
+    ORDER BY expense_date ASC;
+
+-- Get expenses by category
+SELECT * FROM expenses
+WHERE user_id = ? AND category = ?;
+
+-- Search expenses by keyword in title or description
+SELECT * FROM expenses
+WHERE user_id = ?
+    AND (LOWER(title) LIKE CONCAT('%', LOWER(?), '%')
+    OR LOWER(description) LIKE CONCAT('%', LOWER(?), '%'));
+
+-- Get total spending per category for a month
+SELECT category, SUM(amount) AS total
+FROM expenses
+WHERE user_id = ?
+    AND MONTH(expense_date) = ?
+    AND YEAR(expense_date) = ?
+    GROUP BY category
+    ORDER BY total DESC;
+
