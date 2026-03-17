@@ -92,3 +92,36 @@ WHERE user_id = ?
     GROUP BY category
     ORDER BY total DESC;
 
+
+-- Get monthly totals for a year( yearly summary )
+SELECT MONTH(expense_date) AS month, SUM(amount) AS total
+FROM expenses
+WHERE user_id = ? AND YEAR(expense_date) = ?
+GROUP BY MONTH(expense_date)
+ORDER BY month;
+
+
+-- Get top N expenses for a month
+SELECT * FROM expenses
+WHERE user_id = ?
+    AND MONTH(expense_date) = ?
+    AND YEAR(expense_date) = ?
+ORDER BY amount DESC LIMIT ?;
+
+
+-- Get all recurring expenses for a user
+SELECT * FROM expenses
+WHERE user_id = ? AND is_recurring = TRUE
+
+
+-- Get daily spending for a month
+SELECT expense_date AS date, SUM(amount) AS daily_total
+FROM expenses
+WHERE user_id = ?
+    AND MONTH(expense_date) = ?
+  AND YEAR(expense_date) = ?
+GROUP BY expense_date
+ORDER BY date;
+
+
+
