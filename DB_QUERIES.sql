@@ -124,4 +124,3 @@ GROUP BY expense_date
 ORDER BY date;
 
 
-
