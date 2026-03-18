@@ -125,3 +125,36 @@ ORDER BY date;
 
 
 
+-- 5. Budget Queries
+
+-- Upsert a budget
+INSERT INTO budgets (user_id, category, month, year, limit_amount)
+VALUES (?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE limit_amount = VALUES(limit_amount);
+
+
+-- Get a specific budget
+SELECT * FROM budgets
+WHERE user_id = ? AND category = ? AND month = ? AND year = ?;
+
+
+-- Get all budgets for a user
+SELECT * FROM budgets WHERE user_id = ? ORDER BY year, month
+
+
+-- Budget vs actual spending (join query)
+SELECT
+    b.category,
+    b.limit_amount,
+    COALESCE(SUM(e.amount), 0)               AS spent,
+    b.limit_amount - COALESCE(SUM(e.amount), 0) AS remaining,
+    ROUND(COALESCE(SUM(e.amount), 0) / b.limit_amount * 100, 1) AS pct_used
+FROM budgets b
+         LEFT JOIN expenses e
+                   ON  e.user_id  = b.user_id
+                       AND e.category = b.category
+                       AND MONTH(e.expense_date) = b.month
+    AND YEAR(e.expense_date)  = b.year
+WHERE b.user_id = ? AND b.month = ? AND b.year = ?
+GROUP BY b.category, b.limit_amount;
+
