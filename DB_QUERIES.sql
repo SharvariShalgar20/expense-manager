@@ -111,7 +111,7 @@ ORDER BY amount DESC LIMIT ?;
 
 -- Get all recurring expenses for a user
 SELECT * FROM expenses
-WHERE user_id = ? AND is_recurring = TRUE
+WHERE user_id = ? AND is_recurring = TRUE;
 
 
 -- Get daily spending for a month
