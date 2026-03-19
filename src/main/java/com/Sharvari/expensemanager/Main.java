@@ -1,7 +1,12 @@
-package com.sharvari.expensemanager;
+package com.Sharvari.expensemanager;
 
-import com.sharvari.expensemanager.model.*;
-import com.sharvari.expensemanager.service.*;
+import com.Sharvari.expensemanager.model.Category;
+import com.Sharvari.expensemanager.model.Expense;
+import com.Sharvari.expensemanager.model.PaymentMode;
+import com.Sharvari.expensemanager.model.User;
+import com.Sharvari.expensemanager.service.ExpenseService;
+import com.Sharvari.expensemanager.service.ReportService;
+import com.Sharvari.expensemanager.service.UserService;
 
 import java.time.LocalDate;
 import java.time.YearMonth;

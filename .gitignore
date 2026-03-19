@@ -32,3 +32,21 @@ bin/
 ### IntelliJ IDEA ###
 .idea/
 *.iml
+
+# Gradle Junk
+.gradle/
+build/
+
+# IntelliJ Junk
+
+gen/
+
+# Compiled Java Files
+*.class
+
+# Local Database/Temporary Data
+data/
+
+
+# OS Specific
+Thumbs.db

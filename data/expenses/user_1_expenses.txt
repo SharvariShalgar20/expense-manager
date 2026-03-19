@@ -1,1 +1,0 @@
-1|1|books|200.0|EDUCATION|2025-08-29|notebooks with stationary|CASH|false

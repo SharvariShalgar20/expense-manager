@@ -1,7 +1,7 @@
-package com.sharvari.expensemanager.service;
+package com.Sharvari.expensemanager.service;
 
-import com.sharvari.expensemanager.model.User;
-import com.sharvari.expensemanager.repository.UserRepository;
+import com.Sharvari.expensemanager.model.User;
+import com.Sharvari.expensemanager.repository.UserRepository;
 
 import java.util.Optional;
 

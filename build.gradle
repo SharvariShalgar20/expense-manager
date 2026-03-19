@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.Sharvari'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    // Check your capitalization! If folder is "Sharvari", use "Sharvari"
+    mainClass = 'com.Sharvari.expensemanager.Main'
+}
+
+dependencies {
+    implementation 'com.mysql:mysql-connector-j:8.3.0'
+}
+
+//java {
+//    toolchain {
+//        languageVersion = JavaLanguageVersion.of(17)
+//    }
+//}
+
+// This allows you to use Scanner(System.in) in the IntelliJ console
+tasks.named('run') {
+    standardInput = System.in
+}

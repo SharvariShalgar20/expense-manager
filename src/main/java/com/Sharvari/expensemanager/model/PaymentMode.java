@@ -1,4 +1,4 @@
-package com.sharvari.expensemanager.model;
+package com.Sharvari.expensemanager.model;
 
 public enum PaymentMode {
 
