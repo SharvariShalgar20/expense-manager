@@ -1,23 +1,17 @@
 package com.Sharvari.expensemanager.repository;
 
-import com.Sharvari.expensemanager.model.Budget;
-import com.Sharvari.expensemanager.model.Category;
-import com.Sharvari.expensemanager.model.Expense;
+import com.Sharvari.expensemanager.db.DBConnection;
+import com.Sharvari.expensemanager.model.*;
 import com.Sharvari.expensemanager.util.FileUtil;
 
-import java.util.*;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 public class ExpenseRepository {
-
-    private String expenseFilePath(int userId) {
-        return "data/expenses/user_" + userId + "_expenses.txt";
-    }
-
-    private String budgetFilePath(int userId) {
-        return "data/budgets/user_" + userId + "_budgets.txt";
-    }
 
     // ─── Expense CRUD ──────────────────────────────────────────────────────────
     public List<Expense> findAllByUser(int userId) {
