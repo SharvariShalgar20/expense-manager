@@ -1,23 +1,18 @@
 package com.Sharvari.expensemanager.repository;
 
+import com.Sharvari.expensemanager.db.DBConnection;
 import com.Sharvari.expensemanager.model.Budget;
 import com.Sharvari.expensemanager.model.Category;
 import com.Sharvari.expensemanager.model.Expense;
 import com.Sharvari.expensemanager.util.FileUtil;
 
+import java.sql.*;
 import java.util.*;
+import java.sql.Date;
 import java.util.stream.Collectors;
 
 
 public class ExpenseRepository {
-
-    private String expenseFilePath(int userId) {
-        return "data/expenses/user_" + userId + "_expenses.txt";
-    }
-
-    private String budgetFilePath(int userId) {
-        return "data/budgets/user_" + userId + "_budgets.txt";
-    }
 
     // ─── Expense CRUD ──────────────────────────────────────────────────────────
     public List<Expense> findAllByUser(int userId) {
@@ -29,7 +24,34 @@ public class ExpenseRepository {
     }
 
     public void addExpense(Expense expense) {
-        FileUtil.appendLine(expenseFilePath(expense.getUserId()), expense.toFileString());
+        String sql = """
+                    Insert INTO expenses (user_id, title, amount, category, expense_date, description, payment_mode, is_recurring)
+                    VALUES (?, ?, ?, ?, ?, ?,? ,?)
+                """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setInt(1, expense.getUserId());
+            stmt.setString(2, expense.getTitle());
+            stmt.setDouble(3, expense.getAmount());
+            stmt.setString(4, expense.getCategory().name());
+            stmt.setDate(5, Date.valueOf(expense.getDate()));
+            stmt.setString(6, expense.getDescription());
+            stmt.setString(7, expense.getPaymentMode().name());
+            stmt.setBoolean(8, expense.isRecurring());
+            stmt.executeUpdate();
+
+            ResultSet keys = stmt.getGeneratedKeys();
+            if (keys.next()) {
+                // Note: Expense needs a setExpenseId() — add it to Expense.java
+                System.out.println("✅ Expense added with ID: " + keys.getInt(1));
+            }
+
+
+        } catch (SQLException e) {
+            System.err.println("❌ Error adding expense: " + e.getMessage());
+        }
     }
 
     public void deleteExpense(int userId, int expenseId) {
