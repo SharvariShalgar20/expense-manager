@@ -43,13 +43,40 @@ public class ExpenseRepository {
         }
     }
 
-//    public List<Expense> findAllByUser(int userId) {
-//        String path = expenseFilePath(userId);
-//        FileUtil.ensureFileExists(path);
-//        return FileUtil.readLines(path).stream()
-//                .map(Expense::fromFileString)
-//                .collect(Collectors.toList());
-//    }
+
+    public List<Expense> findAllByUser (int userId) {
+        List<Expense> result = new ArrayList<>();
+
+        String sql = "SELECT * FROM expenses" +
+                     "WHERE user_id = ?" +
+                     "ORDER BY expense_date DESC";
+
+        try ( Connection conn = DBConnection.getConnection();
+              PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) result.add(mapRow(rs));
+
+        } catch (SQLException e) {
+            System.err.println("❌ Error fetching expenses: " + e.getMessage());
+        }
+        return result;
+    }
+
+    private Expense mapRow(ResultSet rs) throws SQLException {
+        return new Expense(
+                rs.getInt("expense_id"),
+                rs.getInt("user_id"),
+                rs.getString("title"),
+                rs.getDouble("amount"),
+                Category.valueOf(rs.getString("category")),
+                rs.getDate("expense_date").toLocalDate(),
+                rs.getString("description"),
+                PaymentMode.valueOf(rs.getString("payment_mode")),
+                rs.getBoolean("is_recurring")
+        );
+    }
 
 //    public void deleteExpense(int userId, int expenseId) {
 //        List<Expense> all = findAllByUser(userId);
