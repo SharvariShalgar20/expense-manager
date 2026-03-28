@@ -94,18 +94,31 @@ public class ExpenseRepository {
         }
     }
 
-//    public void updateExpense(Expense updated) {
-//        List<Expense> all = findAllByUser(updated.getUserId());
-//        List<String> lines = all.stream()
-//                .map(e -> e.getExpenseId() == updated.getExpenseId() ? updated.toFileString() : e.toFileString())
-//                .collect(Collectors.toList());
-//        FileUtil.writeLines(expenseFilePath(updated.getUserId()), lines);
-//    }
+    public void updateExpense(Expense e) {
 
-//    public int nextExpenseId(int userId) {
-//        return findAllByUser(userId).stream()
-//                .mapToInt(Expense::getExpenseId).max().orElse(0) + 1;
-//    }
+        String sql = "UPDATE expenses" +
+                      "SET title = ?, amount = ?, category = ?, expense_date = ?, description = ?, payment_mode = ?, is_recurring = ?" +
+                     "WHERE expense_id = ? AND user_id = ?";
+
+        try ( Connection conn = DBConnection.getConnection();
+              PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, e.getTitle());
+            stmt.setDouble(2, e.getAmount());
+            stmt.setString(3, e.getCategory().name());
+            stmt.setDate(4, Date.valueOf(e.getDate()));
+            stmt.setString(5, e.getDescription());
+            stmt.setString(6, e.getPaymentMode().name());
+            stmt.setBoolean(7, e.isRecurring());
+            stmt.setInt(8, e.getExpenseId());
+            stmt.setInt(9, e.getUserId());
+
+            stmt.executeUpdate();
+
+        } catch ( SQLException ex ){
+            System.err.println("❌ Error deleting expense: " + ex.getMessage());
+        }
+    }
 
 
     // ─── Budget CRUD ───────────────────────────────────────────────────────────
