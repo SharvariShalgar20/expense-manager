@@ -116,7 +116,7 @@ public class ExpenseRepository {
             stmt.executeUpdate();
 
         } catch ( SQLException ex ){
-            System.err.println("❌ Error deleting expense: " + ex.getMessage());
+            System.err.println("❌ Error : " + ex.getMessage());
         }
     }
 
