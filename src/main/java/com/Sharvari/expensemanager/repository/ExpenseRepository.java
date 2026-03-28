@@ -78,14 +78,21 @@ public class ExpenseRepository {
         );
     }
 
-//    public void deleteExpense(int userId, int expenseId) {
-//        List<Expense> all = findAllByUser(userId);
-//        List<String> updated = all.stream()
-//                .filter(e -> e.getExpenseId() != expenseId)
-//                .map(Expense::toFileString)
-//                .collect(Collectors.toList());
-//        FileUtil.writeLines(expenseFilePath(userId), updated);
-//    }
+    public void deleteExpense(int userId, int expenseId) {
+
+        String sql = "DELETE FROM expenses WHERE  expense_id = ? AND user_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, expenseId);
+            stmt.setInt(2, userId);
+            stmt.executeUpdate();
+
+        } catch ( SQLException e ) {
+            System.err.println("❌ Error deleting expense: " + e.getMessage());
+        }
+    }
 
 //    public void updateExpense(Expense updated) {
 //        List<Expense> all = findAllByUser(updated.getUserId());
