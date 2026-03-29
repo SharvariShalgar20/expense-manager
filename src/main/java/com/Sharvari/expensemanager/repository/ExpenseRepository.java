@@ -34,10 +34,12 @@ public class ExpenseRepository {
             ResultSet keys = stmt.getGeneratedKeys();
             if (keys.next()) {
                 // Note: Expense needs a setExpenseId() — add it to Expense.java
+
+                int generatedId = keys.getInt(1);
+
+                expense.setExpenseId(generatedId);
                 System.out.println("✅ Expense added with ID: " + keys.getInt(1));
             }
-
-
         } catch (SQLException e) {
             System.err.println("❌ Error adding expense: " + e.getMessage());
         }

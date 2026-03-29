@@ -68,4 +68,8 @@ public class Expense {
         return String.format("[%d] %-20s | %-12s | %8.2f | %-12s | %s | %s | Recurring: %s",
                 expenseId, title, category, amount, paymentMode, date, description, isRecurring);
     }
+
+    public void setExpenseId(int generatedId) {
+        expenseId = generatedId;
+    }
 }
