@@ -124,13 +124,29 @@ public class ExpenseRepository {
 
 
     // ─── Budget CRUD ───────────────────────────────────────────────────────────
-//    public List<Budget> findBudgetsByUser(int userId) {
-//        String path = budgetFilePath(userId);
-//        FileUtil.ensureFileExists(path);
-//        return FileUtil.readLines(path).stream()
-//                .map(Budget::fromFileString)
-//                .collect(Collectors.toList());
-//    }
+    public List<Budget> findBudgetsByUser(int userId) {
+        List<Budget> list = new ArrayList<>();
+        String sql = "SELECT * FROM budgets WHERE user_id = ? ORDER BY year, month";
+
+        try ( Connection conn = DBConnection.getConnection();
+              PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                list.add(new Budget(
+                        rs.getInt("user_id"),
+                        Category.valueOf(rs.getString("category")),
+                        rs.getInt("month"),
+                        rs.getInt("year"),
+                        rs.getDouble("limit_amount")
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Error fetching budgets: " + e.getMessage());
+        }
+        return list;
+    }
 
 //    public void saveBudget(Budget budget) {
 //        int userId = budget.getUserId();
