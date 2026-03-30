@@ -154,7 +154,7 @@ userId|category|month|year|limit
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌──────────────────────────────────────────────────┐
@@ -163,19 +163,32 @@ userId|category|month|year|limit
 └─────────────────────┬────────────────────────────┘
                       │ calls
 ┌─────────────────────▼────────────────────────────┐
-│              Service Layer                       │
+│                Service Layer                     │
 │   UserService  │  ExpenseService  │  ReportService│
+│                │  ExpenseExportService            │
 └─────────────────────┬────────────────────────────┘
                       │ calls
 ┌─────────────────────▼────────────────────────────┐
-│            Repository Layer                      │
+│              Repository Layer                    │
 │       UserRepository  │  ExpenseRepository       │
+└──────────┬──────────────────────┬────────────────┘
+           │ uses                 │ uses
+┌──────────▼──────────────────────▼────────────────┐
+│                 DBConnection.java                │
+│           (Singleton JDBC Connection)            │
 └─────────────────────┬────────────────────────────┘
-                      │ reads/writes via FileUtil
+                      │ SQL via PreparedStatement
 ┌─────────────────────▼────────────────────────────┐
-│         data/ (plain-text .txt files)            │
-│  users.txt │ user_N_expenses.txt │ user_N_budgets │
+│              MySQL Database                      │
+│  expense_manager (schema)                        │
+│  ┌──────────┐  ┌──────────┐  ┌────────────────┐  │
+│  │  users   │  │ expenses │  │    budgets     │  │
+│  └──────────┘  └──────────┘  └────────────────┘  │
 └──────────────────────────────────────────────────┘
+
+  build.gradle
+  └── mysql-connector-j:8.3.0  (downloaded by Gradle
+        from Maven Central, never touched manually)
 ```
 
 ### Class Responsibilities
