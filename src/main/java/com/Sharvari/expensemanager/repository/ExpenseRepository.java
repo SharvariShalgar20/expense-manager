@@ -168,10 +168,31 @@ public class ExpenseRepository {
         }
     }
 
-//    public Optional<Budget> findBudget(int userId, Category category, int month, int year) {
-//        return findBudgetsByUser(userId).stream()
-//                .filter(b -> b.getCategory() == category && b.getMonth() == month && b.getYear() == year)
-//                .findFirst();
-//    }
+    public Optional<Budget> findBudget(int userId, Category category, int month, int year) {
+        String sql = "SELECT * FROM budgets WHERE user_id=? AND category=? AND month=? AND year=?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt   (1, userId);
+            stmt.setString(2, category.name());
+            stmt.setInt   (3, month);
+            stmt.setInt   (4, year);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return Optional.of(new Budget(
+                        rs.getInt("user_id"),
+                        Category.valueOf(rs.getString("category")),
+                        rs.getInt("month"),
+                        rs.getInt("year"),
+                        rs.getDouble("limit_amount")
+                ));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("❌ Error finding budget: " + e.getMessage());
+        }
+        return Optional.empty();
+    }
 
 }
