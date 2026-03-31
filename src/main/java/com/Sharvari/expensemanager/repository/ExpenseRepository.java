@@ -148,25 +148,25 @@ public class ExpenseRepository {
         return list;
     }
 
-//    public void saveBudget(Budget budget) {
-//        int userId = budget.getUserId();
-//        List<Budget> existing = findBudgetsByUser(userId);
-//        // Replace if same category/month/year exists
-//        boolean updated = false;
-//        List<String> lines = new ArrayList<>();
-//        for (Budget b : existing) {
-//            if (b.getCategory() == budget.getCategory()
-//                    && b.getMonth() == budget.getMonth()
-//                    && b.getYear() == budget.getYear()) {
-//                lines.add(budget.toFileString());
-//                updated = true;
-//            } else {
-//                lines.add(b.toFileString());
-//            }
-//        }
-//        if (!updated) lines.add(budget.toFileString());
-//        FileUtil.writeLines(budgetFilePath(userId), lines);
-//    }
+    public void saveBudget(Budget budget) {
+        String sql = "INSERT INTO budgets (user_id, category, month, year, limit_amount)" +
+                "VALUES (?, ?, ?, ?, ?)" +
+                "ON DUPLICATE KEY UPDATE limit_amount = VALUES(limit_amount)";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt   (1, budget.getUserId());
+            stmt.setString(2, budget.getCategory().name());
+            stmt.setInt   (3, budget.getMonth());
+            stmt.setInt   (4, budget.getYear());
+            stmt.setDouble(5, budget.getLimit());
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println("❌ Error saving budget: " + e.getMessage());
+        }
+    }
 
 //    public Optional<Budget> findBudget(int userId, Category category, int month, int year) {
 //        return findBudgetsByUser(userId).stream()
