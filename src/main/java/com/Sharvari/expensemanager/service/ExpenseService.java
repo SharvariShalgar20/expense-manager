@@ -35,7 +35,7 @@ public class ExpenseService {
         int id = repo.nextExpenseId(userId);
         Expense expense = new Expense(id, userId, title.trim(), amount, category, date, description, paymentMode, recurring);
         repo.addExpense(expense);
-        System.out.println("✅ Expense added! ID: " + id);
+        System.out.println("✅ Expense saved to database.");
 
         // Budget alert check
         checkBudgetAlert(userId, category, date.getMonthValue(), date.getYear());
