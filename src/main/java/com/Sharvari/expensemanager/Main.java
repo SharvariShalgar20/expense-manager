@@ -1,5 +1,6 @@
 package com.Sharvari.expensemanager;
 
+import com.Sharvari.expensemanager.db.DBConnection;
 import com.Sharvari.expensemanager.model.Category;
 import com.Sharvari.expensemanager.model.Expense;
 import com.Sharvari.expensemanager.model.PaymentMode;
@@ -27,13 +28,10 @@ public class Main {
         System.out.println("║   Multi-User Expense Manager ║");
         System.out.println("╚══════════════════════════════╝");
 
-        while (true) {
-            if (currentUser == null) {
-                showAuthMenu();
-            } else {
-                showMainMenu();
-            }
-        }
+        do {
+            if (currentUser == null) showAuthMenu();
+            else showMainMenu();
+        } while (true);
     }
 
     // ─── Auth ──────────────────────────────────────────────────────────────────
@@ -45,7 +43,11 @@ public class Main {
         switch (choice) {
             case 1 -> login();
             case 2 -> register();
-            case 3 -> { System.out.println("Goodbye!"); System.exit(0); }
+            case 3 -> {
+                System.out.println("Goodbye!");
+                DBConnection.close();
+                System.exit(0);
+            }
             default -> System.out.println("Invalid option.");
         }
     }
