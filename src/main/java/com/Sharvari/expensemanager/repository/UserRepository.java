@@ -16,8 +16,7 @@ public class UserRepository {
     public void addUser(User user) {
         String sql = "INSERT INTO users (username, password, email, currency) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stmt = DBConnection.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
@@ -40,8 +39,7 @@ public class UserRepository {
     public Optional<User> findByUsername(String username) {
         String sql = "SELECT * FROM users WHERE username = ?";
 
-        try(Connection conn = DBConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)){
+        try(PreparedStatement stmt = DBConnection.getConnection().prepareStatement(sql)){
 
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
@@ -69,8 +67,7 @@ public class UserRepository {
     public Optional<User> findById(int userId) {
         String sql = "SELECT * FROM users WHERE user_id = ?";
 
-        try(Connection conn = DBConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)){
+        try(PreparedStatement stmt = DBConnection.getConnection().prepareStatement(sql)){
 
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
@@ -90,8 +87,7 @@ public class UserRepository {
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users ORDER BY user_id";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = DBConnection.getConnection().prepareStatement(sql)) {
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {

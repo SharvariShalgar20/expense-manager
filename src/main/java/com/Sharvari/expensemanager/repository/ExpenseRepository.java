@@ -17,8 +17,7 @@ public class ExpenseRepository {
                     "Insert INTO expenses (user_id, title, amount, category, expense_date, description, payment_mode, is_recurring)" +
                     " VALUES (?, ?, ?, ?, ?, ?,? ,?)";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stmt = DBConnection.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setInt(1, expense.getUserId());
             stmt.setString(2, expense.getTitle());
@@ -52,8 +51,7 @@ public class ExpenseRepository {
                      "WHERE user_id = ?" +
                      " ORDER BY expense_date DESC";
 
-        try ( Connection conn = DBConnection.getConnection();
-              PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try ( PreparedStatement stmt = DBConnection.getConnection().prepareStatement(sql)) {
 
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
@@ -83,8 +81,7 @@ public class ExpenseRepository {
 
         String sql = "DELETE FROM expenses WHERE  expense_id = ? AND user_id = ?";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = DBConnection.getConnection().prepareStatement(sql)) {
 
             stmt.setInt(1, expenseId);
             stmt.setInt(2, userId);
@@ -101,8 +98,7 @@ public class ExpenseRepository {
                       "SET title = ?, amount = ?, category = ?, expense_date = ?, description = ?, payment_mode = ?, is_recurring = ?" +
                      " WHERE expense_id = ? AND user_id = ?";
 
-        try ( Connection conn = DBConnection.getConnection();
-              PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try ( PreparedStatement stmt = DBConnection.getConnection().prepareStatement(sql)) {
 
             stmt.setString(1, e.getTitle());
             stmt.setDouble(2, e.getAmount());
@@ -127,8 +123,7 @@ public class ExpenseRepository {
         List<Budget> list = new ArrayList<>();
         String sql = "SELECT * FROM budgets WHERE user_id = ? ORDER BY year, month";
 
-        try ( Connection conn = DBConnection.getConnection();
-              PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try ( PreparedStatement stmt = DBConnection.getConnection().prepareStatement(sql)) {
 
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
@@ -152,8 +147,7 @@ public class ExpenseRepository {
                 " VALUES (?, ?, ?, ?, ?)" +
                 " ON DUPLICATE KEY UPDATE limit_amount = VALUES(limit_amount)";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = DBConnection.getConnection().prepareStatement(sql)) {
 
             stmt.setInt   (1, budget.getUserId());
             stmt.setString(2, budget.getCategory().name());
@@ -170,8 +164,7 @@ public class ExpenseRepository {
     public Optional<Budget> findBudget(int userId, Category category, int month, int year) {
         String sql = "SELECT * FROM budgets WHERE user_id=? AND category=? AND month=? AND year=?";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = DBConnection.getConnection().prepareStatement(sql)) {
 
             stmt.setInt   (1, userId);
             stmt.setString(2, category.name());
