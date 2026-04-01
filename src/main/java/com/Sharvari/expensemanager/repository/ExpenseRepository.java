@@ -195,4 +195,10 @@ public class ExpenseRepository {
         return Optional.empty();
     }
 
+    public int nextExpenseId(int userId) {
+        // DB generates IDs automatically now. Return 0 as placeholder.
+        // The real ID comes back from RETURN_GENERATED_KEYS in addExpense().
+        return 0;
+    }
+
 }
