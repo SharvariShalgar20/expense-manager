@@ -13,10 +13,9 @@ public class ExpenseRepository {
     // ─── Expense CRUD ──────────────────────────────────────────────────────────
 
     public void addExpense(Expense expense) {
-        String sql = """
-                    Insert INTO expenses (user_id, title, amount, category, expense_date, description, payment_mode, is_recurring)
-                    VALUES (?, ?, ?, ?, ?, ?,? ,?)
-                """;
+        String sql =
+                    "Insert INTO expenses (user_id, title, amount, category, expense_date, description, payment_mode, is_recurring)" +
+                    " VALUES (?, ?, ?, ?, ?, ?,? ,?)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -51,7 +50,7 @@ public class ExpenseRepository {
 
         String sql = "SELECT * FROM expenses" +
                      "WHERE user_id = ?" +
-                     "ORDER BY expense_date DESC";
+                     " ORDER BY expense_date DESC";
 
         try ( Connection conn = DBConnection.getConnection();
               PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -100,7 +99,7 @@ public class ExpenseRepository {
 
         String sql = "UPDATE expenses" +
                       "SET title = ?, amount = ?, category = ?, expense_date = ?, description = ?, payment_mode = ?, is_recurring = ?" +
-                     "WHERE expense_id = ? AND user_id = ?";
+                     " WHERE expense_id = ? AND user_id = ?";
 
         try ( Connection conn = DBConnection.getConnection();
               PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -150,8 +149,8 @@ public class ExpenseRepository {
 
     public void saveBudget(Budget budget) {
         String sql = "INSERT INTO budgets (user_id, category, month, year, limit_amount)" +
-                "VALUES (?, ?, ?, ?, ?)" +
-                "ON DUPLICATE KEY UPDATE limit_amount = VALUES(limit_amount)";
+                " VALUES (?, ?, ?, ?, ?)" +
+                " ON DUPLICATE KEY UPDATE limit_amount = VALUES(limit_amount)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
