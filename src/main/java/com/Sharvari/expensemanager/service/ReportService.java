@@ -141,4 +141,16 @@ public class ReportService {
         if (recurring.isEmpty()) System.out.println("  None found.");
         else recurring.forEach(e -> System.out.println("  " + e));
     }
+
+    public void printPaymentModeSummary(int userId, int month, int year) {
+        List<Expense> expenses = expenseService.getByMonth(userId, month, year);
+        System.out.println("\n  Payment Mode Summary:");
+
+        Arrays.stream(PaymentMode.values()).forEach(mode -> {
+            double sum = expenses.stream()
+                    .filter(e -> e.getPaymentMode() == mode)
+                    .mapToDouble(Expense::getAmount).sum();
+            if (sum > 0) System.out.printf("  %-15s : %.2f%n", mode, sum);
+        });
+    }
 }
