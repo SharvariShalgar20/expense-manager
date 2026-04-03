@@ -99,7 +99,8 @@ public class Main {
         System.out.println("║  9. View Recurring Expenses     ║");
         System.out.println("║ 10. Top Expenses This Month     ║");
         System.out.println("║ 11. Daily Breakdown             ║");
-        System.out.println("║ 12. Logout                      ║");
+        System.out.println("║ 12. Payment Mode Summary        ║");
+        System.out.println("║ 13. Logout                      ║");
         System.out.println("╚═════════════════════════════════╝");
         System.out.print("Choose: ");
 
@@ -116,7 +117,12 @@ public class Main {
             case 9  -> reportService.printRecurringExpenses(currentUser.getUserId());
             case 10 -> topExpenses();
             case 11 -> dailyBreakdown();
-            case 12 -> { currentUser = null; System.out.println("Logged out."); }
+            case 12 -> {
+                YearMonth ym = askYearMonth();
+                reportService.printPaymentModeSummary(currentUser.getUserId(),
+                        ym.getMonthValue(), ym.getYear());
+            }
+            case 13 -> { currentUser = null; System.out.println("Logged out."); }
             default -> System.out.println("Invalid option.");
         }
     }
